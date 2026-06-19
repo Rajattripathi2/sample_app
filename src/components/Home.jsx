@@ -1,36 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import ProductCard from './ProductCard';
 
-function Home() {
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    // Fetch 20 products from an external API
-    fetch('https://fakestoreapi.com/products')
-      .then((res) => res.json())
-      .then((data) => {
-        // Map data to Amazon India specific format
-        const formattedData = data.map((item) => {
-          const basePriceINR = Math.round(item.price * 83); // Convert to INR roughly
-          const discount = Math.floor(Math.random() * 40) + 10; // Random discount 10-50%
-          const mrp = Math.round(basePriceINR / (1 - discount / 100)); // Calculate MRP based on discount
-          
-          return {
-            id: item.id,
-            title: item.title,
-            price: basePriceINR,
-            mrp: mrp,
-            discount: discount,
-            rating: item.rating.rate,
-            reviewCount: item.rating.count,
-            image: item.image,
-            category: item.category,
-          };
-        });
-        setProducts(formattedData);
-      });
-  }, []);
-
+function Home({ products, onAddToCart, loading }) {
   return (
     <div className="flex justify-center mx-auto max-w-[1500px]">
       <div className="w-full relative">
@@ -40,8 +11,19 @@ function Home() {
           alt="Banner"
         />
 
-        {/* Dynamic Product Grid */}
         <div className="flex z-[1] mx-[5px] flex-wrap justify-center px-1 sm:px-4">
+          {loading && (
+            <div className="w-full text-center py-20 text-white font-bold text-xl">
+              Loading Products...
+            </div>
+          )}
+
+          {!loading && products.length === 0 && (
+            <div className="w-full text-center py-20 text-gray-800 font-bold text-xl">
+              No products found for that search.
+            </div>
+          )}
+
           {products.map((product) => (
             <div key={product.id} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 flex justify-center">
               <ProductCard
@@ -53,16 +35,10 @@ function Home() {
                 rating={product.rating}
                 reviewCount={product.reviewCount}
                 image={product.image}
+                onAddToCart={() => onAddToCart(product)}
               />
             </div>
           ))}
-          
-          {/* Skeleton loading state if products haven't loaded */}
-          {products.length === 0 && (
-            <div className="w-full text-center py-20 text-white font-bold text-xl">
-              Loading Products...
-            </div>
-          )}
         </div>
       </div>
     </div>

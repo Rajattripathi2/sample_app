@@ -1,12 +1,11 @@
 import React from 'react';
 
-function ProductCard({ id, title, image, price, mrp, discount, rating, reviewCount }) {
+function ProductCard({ id, title, image, price, mrp, discount, rating, reviewCount, onAddToCart }) {
   const formattedPrice = new Intl.NumberFormat('en-IN').format(price);
   const formattedMRP = mrp ? new Intl.NumberFormat('en-IN').format(mrp) : null;
 
   return (
     <div className="flex flex-col bg-white z-10 p-3 sm:p-5 m-1 sm:m-2.5 w-full max-w-sm rounded-sm hover:shadow-lg transition-shadow duration-300">
-      {/* Image at the top like Amazon India often does, or title first. Amazon usually does image first. Let's do image first. */}
       <div className="h-[200px] w-full flex items-center justify-center mb-4 cursor-pointer">
         <img src={image} alt={title} className="max-h-[200px] max-w-full object-contain" />
       </div>
@@ -15,7 +14,6 @@ function ProductCard({ id, title, image, price, mrp, discount, rating, reviewCou
         {title}
       </p>
       
-      {/* Rating Row */}
       <div className="flex items-center mb-1">
         <div className="flex text-[#f3a847] text-sm">
           {Array(Math.round(rating))
@@ -34,7 +32,6 @@ function ProductCard({ id, title, image, price, mrp, discount, rating, reviewCou
         </span>
       </div>
       
-      {/* Price Row */}
       <div className="flex items-end mb-1">
         <span className="text-xl font-medium mr-1">
           <small className="align-top text-xs mt-1 inline-block">₹</small>
@@ -48,7 +45,6 @@ function ProductCard({ id, title, image, price, mrp, discount, rating, reviewCou
         )}
       </div>
 
-      {/* Prime & Delivery */}
       <div className="flex flex-col mb-4">
         <div className="flex items-center text-xs text-gray-800 mb-0.5">
           <img 
@@ -63,7 +59,11 @@ function ProductCard({ id, title, image, price, mrp, discount, rating, reviewCou
         </p>
       </div>
 
-      <button className="bg-[#ffd814] border border-transparent rounded-full py-1.5 px-3 mt-auto text-sm text-[#111] hover:bg-[#f7ca00] shadow-sm font-medium w-full mt-2">
+      <button
+        type="button"
+        onClick={onAddToCart}
+        className="bg-[#ffd814] border border-transparent rounded-full py-1.5 px-3 mt-auto text-sm text-[#111] hover:bg-[#f7ca00] shadow-sm font-medium w-full mt-2"
+      >
         Add to cart
       </button>
     </div>
